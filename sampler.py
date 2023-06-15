@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import numpy.random as rand
+from tqdm import tqdm
 
 '''assumptions:
 Inputs:
@@ -22,7 +23,7 @@ def samplefromGaussian(function, maxstep, initialpoint, numsteps):
     outputchain[0]=initialpoint
 
     #for each time step: propose a step at time t/next step
-    for time in range(1,numsteps):
+    for time in tqdm(range(1,numsteps)):
         #do I need a maximum step size?
         proposed=outputchain[time-1]+rand.uniform(-maxstep,maxstep)
 
