@@ -5,19 +5,16 @@ import numpy.random as rand
 '''assumptions:
 Inputs:
  a Gaussian function in 1D 
- an array of x values (my grid) over which the probability distribution can be evaluated, 
- this should be large enough to encapsulate all possibilities of x the sampler may walk to
- the initial point, in this case a value of x within the bounds of the x values array
+ the initial point
  number of steps to take (time/length of chain), integer
+ maximum step size?
 
  Outputs:
  chain of x values that the sampler walked, an arrray
 
 '''
 
-def samplefromGaussian(function, xvalues, initialpoint, numsteps):
-    #evaluate gaussian at each x point
-    probabilities=function(xvalues)
+def samplefromGaussian(function, maxstep, initialpoint, numsteps):
     #make output chain array
     outputchain=np.zeros(numsteps)
 
@@ -26,16 +23,22 @@ def samplefromGaussian(function, xvalues, initialpoint, numsteps):
 
     #for each time step: propose a step at time t/next step
     for time in range(1,numsteps):
-        proposed=outputchain[time-1]+np.rand.uniform(-maxstep,maxstep)
+        #do I need a maximum step size?
+        proposed=outputchain[time-1]+rand.uniform(-maxstep,maxstep)
+
+        #check if step point is higher probability
+        if function(proposed) > function(outputchain[time-1]):
+            outputchain[time]=proposed
+        else:
+            #if not, draw from uniform y~[0,1] and if y<p1/po move if y>p1/p0 dont move
+            #store this xvalue in the output chain array
+            y=np.log(rand.uniform())
+            if y < function(proposed) - function(outputchain[time-1]):
+                outputchain[time]=proposed
+            else: 
+                outputchain[time]=outputchain[time-1]
 
 
-    #check if step point is higher probability
-
-    #if not, draw from uniform y~[0,1] and if y<p1/po move if y>p1/p0 dont move
-
-    #store this xvalue in the output chain array
-
-    #set the x point from this step as the starting point for the next step
-
+#store this xvalue in the output chain array
     #return the outputchain
     return outputchain
