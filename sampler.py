@@ -27,13 +27,13 @@ def samplefromGaussian(function, maxstep, initialpoint, numsteps):
         proposed=outputchain[time-1]+rand.uniform(-maxstep,maxstep)
 
         #check if step point is higher probability
-        if function(proposed) > function(outputchain[time-1]):
+        if np.log(function(proposed)) > np.log(function(outputchain[time-1])):
             outputchain[time]=proposed
         else:
             #if not, draw from uniform y~[0,1] and if y<p1/po move if y>p1/p0 dont move
             #store this xvalue in the output chain array
             y=np.log(rand.uniform())
-            if y < function(proposed) - function(outputchain[time-1]):
+            if y < np.log(function(proposed)) - np.log(function(outputchain[time-1])):
                 outputchain[time]=proposed
             else: 
                 outputchain[time]=outputchain[time-1]
