@@ -30,13 +30,13 @@ def twoDsamplefromGaussian(function, maxstep1, maxstep2, initialpoint, numsteps)
         proposed=outputchain[time-1]+[rand.uniform(-maxstep1,maxstep1),rand.uniform(-maxstep2,maxstep2)]
 
         #check if step point is higher probability, function takes 2D input
-        if np.log(function(proposed)) > np.log(function(outputchain[time-1])):
+        if function(proposed) > function(outputchain[time-1]):
             outputchain[time]=proposed
         else:
             #if not, draw from uniform y~[0,1] in 2D and if y<p1/po move if y>p1/p0 dont move
             #store this xvalue in the output chain array
-            y=[np.log(rand.uniform()),np.log(rand.uniform())]
-            if y[0] < np.log(function(proposed)) - np.log(function(outputchain[time-1])):
+            y=[(rand.uniform()),(rand.uniform())]
+            if y[0] < (function(proposed)) - (function(outputchain[time-1])):
                 outputchain[time]=proposed
             else: 
                 outputchain[time]=outputchain[time-1]
