@@ -13,34 +13,33 @@ Inputs:
 
  Outputs:
  chain of x,y values that the sampler walked through, a 2D arrray
-
 '''
 
 def twoDsamplefromGaussian(function, maxstep1, maxstep2, initialpoint, numsteps):
     #make output chain array 2D
-    outputchain=np.zeros(numsteps,numsteps)
+    outputchain=np.zeros((numsteps,len(initialpoint)))
 
     #start at initial point 2D
-    outputchain[0][0]=initialpoint
+    outputchain[0][:]=initialpoint
 
     #for each time step: propose a step at time t/next step
     for time in tqdm(range(1,numsteps)):
         #do I need a maximum step size? yes
         
         #proposed is a 2D location
-        proposed=outputchain[time-1][time-1]+[rand.uniform(-maxstep1,maxstep1),rand.uniform(-maxstep2,maxstep2)]
+        proposed=outputchain[time-1]+[rand.uniform(-maxstep1,maxstep1),rand.uniform(-maxstep2,maxstep2)]
 
         #check if step point is higher probability, function takes 2D input
-        if np.log(function(proposed)) > np.log(function(outputchain[time-1][time-1])):
-            outputchain[time][time]=proposed
+        if np.log(function(proposed)) > np.log(function(outputchain[time-1])):
+            outputchain[time]=proposed
         else:
             #if not, draw from uniform y~[0,1] in 2D and if y<p1/po move if y>p1/p0 dont move
             #store this xvalue in the output chain array
             y=[np.log(rand.uniform()),np.log(rand.uniform())]
-            if y[0] < np.log(function(proposed[0])) - np.log(function(outputchain[time-1])):
-                outputchain[time][time]=proposed
+            if y[0] < np.log(function(proposed)) - np.log(function(outputchain[time-1])):
+                outputchain[time]=proposed
             else: 
-                outputchain[time][time]=outputchain[time-1][time-1]
+                outputchain[time]=outputchain[time-1]
 
 
 #store this xvalue in the output chain array
