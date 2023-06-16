@@ -20,7 +20,7 @@ def twoDsamplefromGaussian(function, maxstep1, maxstep2, initialpoint, numsteps)
     outputchain=np.zeros((numsteps,len(initialpoint)))
 
     #start at initial point 2D
-    outputchain[0][:]=initialpoint
+    outputchain[0]=initialpoint
 
     #for each time step: propose a step at time t/next step
     for time in tqdm(range(1,numsteps)):
@@ -28,17 +28,16 @@ def twoDsamplefromGaussian(function, maxstep1, maxstep2, initialpoint, numsteps)
         
         #proposed is a 2D location
         proposed=outputchain[time-1]+[rand.uniform(-maxstep1,maxstep1),rand.uniform(-maxstep2,maxstep2)]
-
         #check if step point is higher probability, function takes 2D input
         if function(proposed) > function(outputchain[time-1]):
             outputchain[time]=proposed
         else:
             #if not, draw from uniform y~[0,1] in 2D and if y<p1/po move if y>p1/p0 dont move
             #store this xvalue in the output chain array
-            y=[(rand.uniform()),(rand.uniform())]
-            if y[0] < (function(proposed)) - (function(outputchain[time-1])):
+            y=rand.uniform()
+            if y < (function(proposed) - function(outputchain[time-1])):
                 outputchain[time]=proposed
-            else: 
+            else:
                 outputchain[time]=outputchain[time-1]
 
 
