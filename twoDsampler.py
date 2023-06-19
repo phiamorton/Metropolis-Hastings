@@ -34,7 +34,7 @@ def twoDsamplefromGaussian(function, maxstep1, maxstep2, initialpoint, numsteps)
         else:
             #if not, draw from uniform y~[0,1] in 2D and if y<p1/po move if y>p1/p0 dont move
             #store this xvalue in the output chain array
-            y=rand.uniform()
+            y=np.log(rand.uniform())
             if y < (function(proposed) - function(outputchain[time-1])):
                 outputchain[time]=proposed
             else:
